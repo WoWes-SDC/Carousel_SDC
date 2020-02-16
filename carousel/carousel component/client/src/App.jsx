@@ -23,6 +23,14 @@ export default class App extends React.Component {
     this.getClickedItem = this.getClickedItem.bind(this)
   }
 
+  componentDidMount(){
+    this.fetchAllData()
+    window.addEventListener('jordanAwesome', e => {
+      this.getRelatedItems(e)
+      this.getClickedItem(e)
+    })
+  }
+
   handleLeft(){
     console.log('%c wooWEE don\'t change my CODE or there\'ll be hell to pay', 'font-size: 40; color: yellow;');
     if(this.state.classIncrement > 0){
@@ -48,14 +56,6 @@ export default class App extends React.Component {
     if((this.state.classIncrementViewed) < (this.state.data.length / 2)){
       this.setState({classIncrementViewed : this.state.classIncrementViewed+=1})
     }
-  }
-
-  componentDidMount(){
-    this.fetchAllData()
-    window.addEventListener('jordanAwesome', e => {
-      this.getRelatedItems(e)
-      this.getClickedItem(e)
-    })
   }
 
   getClickedItem(e){
@@ -98,18 +98,18 @@ export default class App extends React.Component {
     }).then((response) => {
       // console.log('this is the response from trying to get a category-->', response.data)
       console.image('https://cdn.betterttv.net/emote/5c5d92e639bfc5202398b49b/3x');
-      let tenList = [];
+      let imageList = [];
       let randomNum = Math.floor(Math.random() * Math.floor(4));
       let endNum = 15;
       for(let i = randomNum; i < (randomNum + endNum); i ++){ //use random list of fifteen related items
         if(response.data[i].id !== idThing){
-          tenList.push(response.data[i])
+          imageList.push(response.data[i])
         } else {
           endNum+=1;
         }
       }
       this.setState({
-        selection: tenList,
+        selection: imageList,
         // classIncrement: 0 --optional bounceback on search
       })
     })
@@ -119,13 +119,13 @@ export default class App extends React.Component {
     axios.get('http://carousel.us-east-2.elasticbeanstalk.com/wowStuff').then((response) => {
       // console.log('this is the response from getting all the stuff --> ', response.data)
       console.image('https://cdn.betterttv.net/emote/56f24cba51361dbf34724454/3x');
-      let tenList = [];
-      for(let i = 1; i < 16; i++){
-        tenList.push(response.data[i])
+      let imageList = [];
+      for(let i = 0; i < 15; i++){
+        imageList.push(response.data[i])
       }
       this.setState({
         data : response.data,
-        selection: tenList
+        selection: imageList
       })
     })
     .catch((err) => {
