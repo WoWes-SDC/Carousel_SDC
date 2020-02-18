@@ -8,7 +8,7 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      data: [], //currently unused but populates with all of the data in DB
+      data: [],
       classIncrement: 0,
       classIncrementViewed: 0,
       selection: [],
@@ -98,9 +98,7 @@ export default class App extends React.Component {
         }
       })
       .then(response => {
-        // console.log('this is the response from trying to get a category-->', response.data)
         let imageList = [];
-
         for (let i = 0; i < 15; i++) {
           //use random list of fifteen related items
           imageList.push(response.data[i]);
@@ -113,7 +111,7 @@ export default class App extends React.Component {
   }
 
   fetchAllData() {
-    //gets all the data from DB
+    //gets 15 records from the data from DB
     axios
       .get("http://carousel.us-east-2.elasticbeanstalk.com/wowStuff")
       .then(response => {
