@@ -58,22 +58,22 @@ export default class App extends React.Component {
 
   getClickedItem(e) {
     axios
-      .get("http://carousel.us-east-2.elasticbeanstalk.com/wowStuff/item", {
+      .get("/wowStuff/item", {
         params: {
-          id: e.detail
+          id: e.detail ? e.detail : 1
         }
       })
       .then(response => {
         //check and see if item is already in carousel. if it isn't -->
         var isPopulated = false;
         for (let i = 0; i < this.state.selectionViewed.length; i++) {
-          if (this.state.selectionViewed[i].id === response.data[0].id) {
+          if (this.state.selectionViewed[i].id === response.data.rows[0].id) {
             isPopulated = true;
             break;
           }
         }
         if (!isPopulated) {
-          let temp = this.state.selectionViewed.concat(response.data);
+          let temp = this.state.selectionViewed.concat(response.data.rows);
           this.setState({
             selectionViewed: temp
             // classIncrementViewed : 0  --optional bounceback on search
@@ -89,10 +89,10 @@ export default class App extends React.Component {
   }
 
   getRelatedItems(e) {
-    // console.log('this is the detail -->', e.detail)
-    let idThing = e.detail;
+    // console.log("getrelateditems", idThing);
+    let idThing = e.detail ? e.detail : 1;
     axios
-      .get("http://carousel.us-east-2.elasticbeanstalk.com/wowStuff/category", {
+      .get("/wowStuff/category", {
         params: {
           id: idThing
         }
@@ -101,7 +101,7 @@ export default class App extends React.Component {
         let imageList = [];
         for (let i = 0; i < 15; i++) {
           //use random list of fifteen related items
-          imageList.push(response.data[i]);
+          imageList.push(response.data.rows[i]);
         }
         this.setState({
           selection: imageList
@@ -113,14 +113,16 @@ export default class App extends React.Component {
   fetchAllData() {
     //gets 15 records from the data from DB
     axios
-      .get("http://carousel.us-east-2.elasticbeanstalk.com/wowStuff")
+      .get("/wowStuff")
       .then(response => {
+        // console.log(response);
         let imageList = [];
         for (let i = 0; i < 15; i++) {
-          imageList.push(response.data[i]);
+          response.data.rows[i].image = "https://loremflickr.com/320/240";
+          imageList.push(response.data.rows[i]);
         }
         this.setState({
-          data: response.data,
+          data: response.data.rows,
           selection: imageList
         });
       })

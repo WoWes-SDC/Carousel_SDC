@@ -1,16 +1,23 @@
-const mysql = require("mysql");
+// const mysql = require("mysql");
 
-const connection = mysql.createConnection({
-  host: "wowescarousel.crg6wckxsyhk.us-east-2.rds.amazonaws.com",
-  user: "rhodetyl000",
-  password: "Nonewpassword",
-  port: 3306,
-  database: "Wowes"
-});
+// const connection = mysql.createConnection({
+//   host: "wowescarousel.crg6wckxsyhk.us-east-2.rds.amazonaws.com",
+//   user: "rhodetyl000",
+//   password: "Nonewpassword",
+//   port: 3306,
+//   database: "Wowes"
+// });
 
-connection.connect(err => {
-  console.log("now connected to your database");
+const { Client } = require("pg");
+
+const connection = new Client({
+  user: "postgres",
+  host: "localhost",
+  database: "test",
+  password: "password",
+  port: 5432
 });
+connection.connect();
 
 const getAllData = callback => {
   connection.query(`SELECT * FROM items LIMIT 15;`, (err, data) => {
