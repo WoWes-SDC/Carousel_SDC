@@ -28,7 +28,7 @@ const getCategories = (id, callback) => {
     `SELECT * FROM 
     (
     SELECT * FROM items 
-    WHERE category = (SELECT category FROM items WHERE id = ${id}) 
+    WHERE category = (SELECT category FROM items WHERE id = ${id}) AND id != ${id}
     LIMIT 100
     ) as a
     ORDER BY RANDOM()

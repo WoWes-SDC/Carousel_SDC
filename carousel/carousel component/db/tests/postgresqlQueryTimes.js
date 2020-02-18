@@ -23,14 +23,14 @@ client.query(
   `EXPLAIN ANALYZE SELECT * FROM 
   (
   SELECT * FROM items 
-  WHERE category = (SELECT category FROM items WHERE id = ${randID}) 
+  WHERE category = (SELECT category FROM items WHERE id = ${randID}) AND id != ${randID}
   LIMIT 100
   ) as a
   ORDER BY RANDOM()
   LIMIT 15;`,
   (err, data) => {
     console.log(data.rows.slice(-2));
-    // ~2.00ms execution time
+    // ~3.00ms execution time
   }
 );
 
