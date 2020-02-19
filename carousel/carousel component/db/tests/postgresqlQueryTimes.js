@@ -9,14 +9,12 @@ const client = new Client({
 });
 client.connect();
 
-
 /****************** getAllData ******************/
 client.query(`EXPLAIN ANALYZE SELECT * FROM items LIMIT 15;`, (err, data) => {
   console.log(data.rows.slice(-2));
   // ~0.05ms. Query is faster via the terminal
 });
 let randID = Math.ceil(Math.random() * 10000000);
-
 
 /****************** getCategories ******************/
 client.query(
