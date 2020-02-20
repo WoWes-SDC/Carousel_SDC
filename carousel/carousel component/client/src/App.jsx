@@ -25,6 +25,7 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.fetchAllData();
+    // this.getRelatedItems();
     window.addEventListener("jordanAwesome", e => {
       this.getRelatedItems(e);
       this.getClickedItem(e);
@@ -60,20 +61,22 @@ export default class App extends React.Component {
     axios
       .get("/wowStuff/item", {
         params: {
-          id: e.detail ? e.detail : 1
+          id: e ? e.detail : 1
         }
       })
       .then(response => {
+        // console.log("getClickedItem", response.data);
+        response = response.data;
         //check and see if item is already in carousel. if it isn't -->
         var isPopulated = false;
         for (let i = 0; i < this.state.selectionViewed.length; i++) {
-          if (this.state.selectionViewed[i].id === response.data.rows[0].id) {
+          if (this.state.selectionViewed[i].id === response[0].id) {
             isPopulated = true;
             break;
           }
         }
         if (!isPopulated) {
-          let temp = this.state.selectionViewed.concat(response.data.rows);
+          let temp = this.state.selectionViewed.concat(response);
           this.setState({
             selectionViewed: temp
             // classIncrementViewed : 0  --optional bounceback on search
@@ -89,8 +92,8 @@ export default class App extends React.Component {
   }
 
   getRelatedItems(e) {
+    let idThing = e ? e.detail : ~~(Math.random() * 10000);
     // console.log("getrelateditems", idThing);
-    let idThing = e.detail ? e.detail : 1;
     axios
       .get("/wowStuff/category", {
         params: {
@@ -98,10 +101,12 @@ export default class App extends React.Component {
         }
       })
       .then(response => {
+        // console.log("getRelatedItems", response.data);
+        response = response.data;
         let imageList = [];
         for (let i = 0; i < 15; i++) {
           //use random list of fifteen related items
-          imageList.push(response.data.rows[i]);
+          imageList.push(response[i]);
         }
         this.setState({
           selection: imageList
@@ -112,17 +117,19 @@ export default class App extends React.Component {
 
   fetchAllData() {
     //gets 15 records from the data from DB
+    // console.log("fetchAllData");
     axios
       .get("/wowStuff")
       .then(response => {
-        // console.log(response);
+        // console.log("fetchAllData", response.data);
+        response = response.data;
         let imageList = [];
         for (let i = 0; i < 15; i++) {
-          response.data.rows[i].image = "https://loremflickr.com/320/240";
-          imageList.push(response.data.rows[i]);
+          response[i].image = "https://loremflickr.com/320/240";
+          imageList.push(response[i]);
         }
         this.setState({
-          data: response.data.rows,
+          data: response,
           selection: imageList
         });
       })

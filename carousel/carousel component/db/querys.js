@@ -1,21 +1,24 @@
-// const mysql = require("mysql");
+// const { Client } = require("pg");
 
-// const connection = mysql.createConnection({
-//   host: "wowescarousel.crg6wckxsyhk.us-east-2.rds.amazonaws.com",
-//   user: "rhodetyl000",
-//   password: "Nonewpassword",
-//   port: 3306,
-//   database: "Wowes"
+// const connection = new Client({
+//   user: "postgres",
+//   host: "localhost",
+//   database: "test",
+//   password: "password",
+//   port: 5432
 // });
+// connection.connect();
 
-const { Client } = require("pg");
-
-const connection = new Client({
+const { Pool } = require("pg");
+const connection = new Pool({
   user: "postgres",
   host: "localhost",
   database: "test",
   password: "password",
-  port: 5432
+  port: 5432,
+  // max: 4,
+  // idleTimeoutMillis: 3000,
+  // connectionTimeoutMillis: 2000
 });
 connection.connect();
 
@@ -32,9 +35,9 @@ const getAllData = callback => {
 
 const getCategories = (id, callback) => {
   connection.query(
-    `SELECT * FROM 
+    `SELECT * FROM
     (
-    SELECT * FROM items 
+    SELECT * FROM items
     WHERE category = (SELECT category FROM items WHERE id = ${id}) AND id != ${id}
     LIMIT 100
     ) as a
